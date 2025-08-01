@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.model.response.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +26,9 @@ public class WeatherService {
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable("weatherByLocation")
     public WeatherResponse fetchWeatherForLocation(String location) {
+        log.info("Cache MISS - Fetching weather data from external API for location: {}", location);
         String url = baseUrl + location + accessKey;
         return restTemplate.getForObject(url, WeatherResponse.class);
     }
