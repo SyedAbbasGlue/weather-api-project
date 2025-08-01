@@ -28,6 +28,9 @@ public class WeatherService {
 
     @Cacheable("weatherByLocation")
     public WeatherResponse fetchWeatherForLocation(String location) {
+        if (location == null || location.trim().isEmpty()) {
+            throw new IllegalArgumentException("location cannot be null");
+        }
         log.info("Cache MISS - Fetching weather data from external API for location: {}", location);
         String url = baseUrl + location + accessKey;
         return restTemplate.getForObject(url, WeatherResponse.class);
